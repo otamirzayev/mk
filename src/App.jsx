@@ -1,85 +1,91 @@
-import { createBrowserRouter,RouterProvider, Navigate } from 'react-router-dom'
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
 // Layout
-import MainLayout from "./Layout/MainLayout"
+import MainLayout from "./Layout/MainLayout";
 
 // pgeas
-import Home from "./pages/Home"
-import  Signin from "./pages/Signin"
-import Signup from "./pages/Signup"
-import About from './pages/About'
-import Contact from "./pages/Contact"
+import Home from "./pages/Home";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 // components
-import ProtectedRotes from './components/ProtectedRotes'
+import ProtectedRotes from "./components/ProtectedRotes";
 
 // context
 
-import { useContext, useEffect } from 'react'
-import { GlobalContext } from './context/useGlobalContext'
+import { useContext, useEffect } from "react";
+import { GlobalContext } from "./context/useGlobalContext";
 
 //firebase
 
-import { auth } from './firebase/firebaseConfig'
-import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from "./firebase/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 //action imput
 
-import {action as signupAction} from "./pages/Signup"
-import {action as signinAction} from "./pages/Signin"
+import { action as signupAction } from "./pages/Signup";
+import { action as signinAction } from "./pages/Signin";
+import Create from "./pages/Create";
 
-
-function App(){
-  const {user , dispatch, authChange} = useContext(GlobalContext)
-  const routes =createBrowserRouter([
+function App() {
+  const { user, dispatch, authChange } = useContext(GlobalContext);
+  const routes = createBrowserRouter([
     {
-      path:"/",
-       element:(
-       <ProtectedRotes user={user}>
-         <MainLayout/>
-       </ProtectedRotes>),
-      children:[
+      path: "/",
+      element: (
+        <ProtectedRotes user={user}>
+          <MainLayout />
+        </ProtectedRotes>
+      ),
+      children: [
         {
-           index:true,
-           element :<Home/>
+          index: true,
+          element: <Home />,
         },
         {
-          path: '/about',
-          element: <About/>
+          path: "/about",
+          element: <About />,
         },
         {
-          path:'/contact',
-          element:<Contact/>
-        }
-      ]
+          path: "/contact",
+          element: <Contact />,
+        },
+        {
+          path: "/create",
+          element: <Create />,
+        },
+      ],
     },
     {
-      path:"/signin",
-      element : user ? <Navigate to="/" /> : <Signin/>,
+      path: "/signin",
+      element: user ? <Navigate to="/" /> : <Signin />,
       action: signinAction,
-      
     },
     {
-      path:"/signup",
-      element :user ? <Navigate to="/" /> : <Signup/>,
+      path: "/signup",
+      element: user ? <Navigate to="/" /> : <Signup />,
       action: signupAction,
-
     },
   ]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-     dispatch({
-      type: "SIGN_IN",
-      payload: user,
-     })
-     dispatch({
-      type: "AUTH_CHANGE",
-     })
+      dispatch({
+        type: "SIGN_IN",
+        payload: user,
+      });
+      dispatch({
+        type: "AUTH_CHANGE",
+      });
     });
-  } , [])
-  return <>{authChange && <RouterProvider router={routes}/>}</>
+  }, []);
+  return <>{authChange && <RouterProvider router={routes} />}</>;
 }
 
-export default App
-
+export default App;

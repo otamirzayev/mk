@@ -15,6 +15,11 @@ const links=[
         id:3,
         text:"Contact",
         link:"/contact"
+    },
+    {
+        id:4,
+        text:"Create",
+        link:"/create"
     }
 ]
 
